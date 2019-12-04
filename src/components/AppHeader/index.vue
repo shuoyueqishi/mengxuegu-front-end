@@ -17,20 +17,24 @@
 </template>
 
 <script>
-import {logout} from '@/api/login.js'
+import * as types from '@/store/types'
+import store from '@/store/store'
 export default {
      methods: {
       handleCommand(command) {
         switch(command) {
             case 'modifyPassword':
+                console.log('modifyPassword');
                 break;
             case 'logout':
-                console.log('in console......>>>>>>');
-                logout(localStorage.getItem(localStorage.getItem('mxg-msm-token'))).then(Response=>{
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    this.$router.push('/login')
-                });
+                console.log('in logout');
+                if (store.state.token != null) {
+                   store.commit(types.LOGOUT);
+                }
+                if (store.state.user != null) {
+                   store.commit(types.USER);
+                }
+                this.$router.push('/login');
                 break;
             default: break;
         }

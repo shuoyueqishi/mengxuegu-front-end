@@ -8,21 +8,4 @@ export function login(username, password) {
     })
 }
 
-export function getUserInfo(token) {
-    return axios({
-        url: `/user/info`,
-        method: 'get'
-    })
-}
-
-export function logout(token) {
-    return axios({
-        url: `/user/logout`,
-        method: 'post',
-        data: {
-            token //token: token
-        }
-    })
-}
-
 

@@ -60,15 +60,34 @@
             </template>
          </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <el-pagination
+         style="width: 100%"
+         @size-change="handleSizeChange"
+         @current-change="handleCurrentChange"
+         :current-page="page.currentPage"
+         :page-sizes="page.pageSizeOption"
+         :page-size="page.pageSize"
+         layout="total, sizes, prev, pager, next, jumper"
+         :total="page.total">
+    </el-pagination>
    </div>
 </template>
 
 <script>
-import memberApi from '@/api/member'
+import axios from '@/http.js'
+import { member } from "@/config/url.json";
 export default {
    data() {
       return {
-         list:[]
+         list:[],
+         page:{
+            currentPage: 1,
+            pageSize: 10,
+            total: 0,
+            totalPages: 0,
+            pageSizeOption: [10,20,50,100]
+         }
       }
    },
    //钩子函数获取数据
@@ -77,8 +96,19 @@ export default {
     },
     methods: {
        fetchData() {
-          memberApi.getList().then(response => {
-             this.list = response.data.result;
+          console.log(member.search);
+          axios({
+            url: member.search+'/10/1',
+            method:'get'
+          }).then(response => {
+            let data = response.data;
+             console.log(data);
+             this.list = data.result;
+             this.page.currentPage = data.page.currentPage;
+             this.page.pageSize = data.page.pageSize;
+             this.page.total = data.page.total;
+             this.page.totalPages = data.page.totalPages;
+             console.log(this.page)
           })
        },
        handleEdit(id) {
@@ -86,7 +116,13 @@ export default {
        },
        handleDelete(id) {
           console.log('删除');
-       }
+       },
+       handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      }
     }
 }
 </script>

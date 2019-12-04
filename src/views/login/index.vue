@@ -9,14 +9,16 @@
               <el-input v-model="form.password" type="password" placeholder="请输入密码"></el-input>
           </el-form-item>
           <el-form-item>
-              <el-button type="primary" @click="submitForm('form')">登录</el-button>
+              <el-button type="primary" @click="submitForm('form')" @keyup.enter="submitForm('form')">登录</el-button>
           </el-form-item>
       </el-form>
   </div>
 </template>
 
 <script>
-import {login, getUserInfo} from '@/api/login'
+// import {login} from '@/api/login'
+import axios from '@/http.js'
+import { login } from "@/config/url.json";
 import * as types from '@/store/types'
   export default {
     data() {
@@ -35,6 +37,15 @@ import * as types from '@/store/types'
          }
       }
     },
+    created(){
+    var _self = this;
+    document.onkeydown = function(e){
+        var key = window.event.keyCode;
+        if(key == 13){
+            _self.submitForm('form');
+        }
+      }
+    },
      mounted(){
       this.$store.commit(types.TITLE, 'Login');
     },
@@ -44,13 +55,19 @@ import * as types from '@/store/types'
             console.log(valid)
             if (valid) {
                 // 提交表单给后台进行验证是否正确
-                login(this.form.username, this.form.password)
-                .then(response => {
+                //login(this.form.username, this.form.password)
+                let params={
+                    username: this.form.username,
+                    password: this.form.password
+                    };
+                axios.get(login,{
+                    params
+                }).then(response => {
                     const resp = response.data 
                     console.log(resp)
                     if(resp.status==='SUCCESS') {
                          // 1. 保存 token ，用户信息
-                         this.$store.commit('user', JSON.stringify(resp.result[0].name))
+                         this.$store.commit(types.USRE, resp.result[0].name)
                          this.$store.commit(types.LOGIN, resp.result[0].token)
                          console.log("this.$router.push('/')");
                          this.$router.push('/')
@@ -68,7 +85,7 @@ import * as types from '@/store/types'
                 return false
             }
         })
-    }
+    },
   }
 }
 </script>

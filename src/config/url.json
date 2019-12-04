@@ -1,0 +1,9 @@
+{
+    "login": "login/auth",
+    "member":{
+        "search" : "member/list",
+        "update" : "member/update",
+        "delete" : "member/delete",
+        "add": "member/add"
+    }
+}
