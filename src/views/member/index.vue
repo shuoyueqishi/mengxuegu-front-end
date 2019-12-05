@@ -2,45 +2,53 @@
    <div >
       <el-table
          :data="list"
-         height="380"
+         height="578"
          border
          style="width: 100%">
          <el-table-column
             type="index"
             label="序号"
-            width="60">
+            width="80">
          </el-table-column>
          <el-table-column
             prop="cardNumber"
-            label="会员卡号">
+            label="会员卡号"
+            width=120>
          </el-table-column>
          <el-table-column
             prop="name"
-            label="会员姓名">
+            label="会员姓名"
+            width="120">
          </el-table-column>
          <el-table-column
             prop="telephoneNumber"
-            label="手机号码">
+            label="手机号码"
+            width="130">
          </el-table-column>
          <el-table-column
             prop="birthday"
-            label="会员生日">
+            label="会员生日"
+            width="80">
          </el-table-column>
          <el-table-column
             prop="integral"
-            label="可用积分">
+            label="可用积分"
+            width="100">
          </el-table-column>
          <el-table-column
             prop="money"
-            label="开卡金额">
+            label="开卡金额"
+            width="100">
          </el-table-column>
          <el-table-column
             prop="paymentType"
-            label="支付类型">
+            label="支付类型"
+            width="100">
          </el-table-column>
          <el-table-column
             prop="address"
-            label="会员地址">
+            label="会员地址"
+            >
          </el-table-column>
          <el-table-column
             label="操作"
@@ -98,7 +106,7 @@ export default {
        fetchData() {
           console.log(member.search);
           axios({
-            url: member.search+'/10/1',
+            url: member.search+'/'+this.page.pageSize+'/'+this.page.currentPage,
             method:'get'
           }).then(response => {
             let data = response.data;
@@ -116,12 +124,22 @@ export default {
        },
        handleDelete(id) {
           console.log('删除');
+           axios({
+            url: member.delete+'/'+id,
+            method:'delete'
+          }).then(response => {
+            this.fetchData();
+          })
        },
        handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
+        this.page.pageSize = val;
+        this.fetchData();
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+        this.page.currentPage = val;
+        this.fetchData();
       }
     }
 }
