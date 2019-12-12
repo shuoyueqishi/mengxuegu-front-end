@@ -13,11 +13,11 @@
          </el-form-item>
          <el-form-item label="支付方式" prop="paymentType" size="medium">
             <el-select v-model="memberQuery.paymentType" placeholder="paymentType">
-               <el-option label="银行卡" value="0"></el-option>
-               <el-option label="支付宝" value="1"></el-option>
-               <el-option label="微信" value="2"></el-option>
-               <el-option label="现金" value="3"></el-option>
-               <el-option label="信用卡" value="4"></el-option>
+               <el-option label="银行卡" value="1"></el-option>
+               <el-option label="支付宝" value="2"></el-option>
+               <el-option label="微信" value="3"></el-option>
+               <el-option label="现金" value="4"></el-option>
+               <el-option label="信用卡" value="5"></el-option>
             </el-select>
          </el-form-item>
          <el-form-item>
@@ -61,53 +61,70 @@
       <!-- 分页 -->
       <el-pagination
          style="width: 100%"
-         @size-blur="handleSizeblur"
-         @current-blur="handleCurrentblur"
+         @size-change="handleSizeChange"
+         @current-change="handleCurrentChange"
          :current-page="page.currentPage"
          :page-sizes="page.pageSizeOption"
          :page-size="page.pageSize"
          layout="total, sizes, prev, pager, next, jumper"
          :total="page.total">
-    </el-pagination>
+      </el-pagination>
+
     <!-- 新增或更新会员 -->
-    <el-dialog :title="addUpdateTitle" :visible.sync="dialogFormVisible" width="400px" @close="resetForm('addUpdateForm')">
+    <el-dialog :title="addUpdateTitle" :visible.sync="dialogFormVisible" width="650px" @close="resetForm('addUpdateForm')">
          <el-form :model="addUpdateForm" :rules="rules" ref="addUpdateForm" label-width="90px" size="mini">
+            <el-col :span="12">
                <el-form-item label="会员卡号" prop="cardNumber">
                   <el-input v-model="addUpdateForm.cardNumber"></el-input>
                </el-form-item>
+            </el-col>
+            <el-col :span="12">
                <el-form-item label="会员姓名" prop="name">
                      <el-input v-model="addUpdateForm.name"></el-input>
                </el-form-item>
+            </el-col>
+            <el-col :span="12">
                <el-form-item label="电话号码" prop="telephoneNumber">
                  <el-input v-model="addUpdateForm.telephoneNumber"></el-input>
                </el-form-item>
+            </el-col>
+            <el-col :span="12">
               <el-form-item label="会员生日" required>
                   <el-form-item prop="birthday">
                     <el-date-picker type="date" format="MM-dd" value-format="MM-dd" placeholder="选择日期" v-model="addUpdateForm.birthday" style="width: 100%;"></el-date-picker>
                   </el-form-item>
               </el-form-item>
+            </el-col>
+            <el-col :span="12">
                <el-form-item label="可用积分" prop="integral">
                   <el-input v-model="addUpdateForm.integral"></el-input>
                </el-form-item>
+            </el-col>
+            <el-col :span="12">
                <el-form-item label="剩余金额" prop="money">
                   <el-input v-model="addUpdateForm.money"></el-input>
                </el-form-item>
+            </el-col>
+            <el-col :span="12">
                <el-form-item label="支付类型" prop="paymentType">
                   <el-select v-model="addUpdateForm.paymentType" placeholder="请选择支付的方式" style="width: 100%;">
-                     <el-option label="银行卡" value="0"></el-option>
-                     <el-option label="支付宝" value="1"></el-option>
-                     <el-option label="微信" value="2"></el-option>
-                     <el-option label="现金" value="3"></el-option>
-                     <el-option label="信用卡" value="4"></el-option>
+                     <el-option label="银行卡" value="1"></el-option>
+                     <el-option label="支付宝" value="2"></el-option>
+                     <el-option label="微信" value="3"></el-option>
+                     <el-option label="现金" value="4"></el-option>
+                     <el-option label="信用卡" value="5"></el-option>
                   </el-select>
                </el-form-item>
+            </el-col>
+            <el-col :span="12">
                <el-form-item label="常用地址" prop="address">
                   <el-input v-model="addUpdateForm.address"></el-input>
                </el-form-item>
-               <el-form-item>
-                  <el-button type="primary" @click="addUpdateMember('addUpdateForm')">{{addUpdateOperation}}</el-button>
-                  <el-button type="primary" @click="resetForm('addUpdateForm')">重置</el-button>
-               </el-form-item>
+            </el-col>
+               <div class="addUpdateBtn">
+                   <el-button type="primary" size="small" @click="addUpdateMember('addUpdateForm')">{{addUpdateOperation}}</el-button>
+                   <el-button type="primary" size="small" @click="resetForm('addUpdateForm')">重置</el-button>
+               </div>
          </el-form>
       </el-dialog>
    </div>
@@ -190,11 +207,11 @@ export default {
              this.list = data.result;
              for(let item of this.list) {
                 switch(item.paymentType) {
-                case 0: item.paymentType='银行卡'; break;
-                case 1: item.paymentType='支付宝'; break;
-                case 2: item.paymentType='微信'; break;
-                case 3: item.paymentType='现金'; break;
-                case 4: item.paymentType='信用卡'; break;
+                case 1: item.paymentType='银行卡'; break;
+                case 2: item.paymentType='支付宝'; break;
+                case 3: item.paymentType='微信'; break;
+                case 4: item.paymentType='现金'; break;
+                case 5: item.paymentType='信用卡'; break;
                 default: break;
                }
              }
@@ -241,6 +258,7 @@ export default {
                      let data = response.data;
                      if (data.status === 'success') {
                         this.$message({type: 'success',message: data.message});
+                        this.fetchData();
                      } else {
                         this.$message({type: 'fail',message: data.message});
                      }
@@ -280,41 +298,49 @@ export default {
           this.addUpdateForm = row;
           console.log("this.addUpdateMember.telephoneNumber="+this.addUpdateForm.telephoneNumber);
           this.addUpdateForm.telephoneNumber = this.addUpdateForm.telephoneNumber+'';
+          let paymentType =  this.addUpdateForm.paymentType;
+          switch(paymentType) {
+                case '银行卡': this.addUpdateForm.paymentType=1; break;
+                case '支付宝': this.addUpdateForm.paymentType=2; break;
+                case '微信': this.addUpdateForm.paymentType=3; break;
+                case '现金': this.addUpdateForm.paymentType=4; break;
+                case '信用卡': this.addUpdateForm.paymentType=5; break;
+                default: break;
+          };
+          this.addUpdateForm.lastUpdateBy=window.localStorage.getItem('user');
           this.dialogFormVisible = true;
           this.addUpdateOperation = '修改';
-           this.addUpdateTitle = '修改会员信息';
-          this.addUpdateMember('addUpdateMember');
+          this.addUpdateTitle = '修改会员信息';
        },
        handleDelete(id) {
           console.log('删除');
           this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-         axios({url: member.delete+'/'+id, method:'delete'})
-         .then(response => {
-            this.fetchData();
-          })
-          this.$message({type: 'success',message: '删除成功!'});
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-           
+               confirmButtonText: '确定',
+               cancelButtonText: '取消',
+               type: 'warning'
+           }).then(() => {
+               axios({url: member.delete+'/'+id, method:'delete'}).then(response => {
+                  this.fetchData();
+                  });
+               this.$message({type: 'success',message: '删除成功!'});
+           }).catch(() => {
+               this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                  });          
+            });
        },
-       handleSizeblur(val) {
+       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
         this.page.pageSize = val;
         this.fetchData();
       },
-      handleCurrentblur(val) {
+      handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
         this.page.currentPage = val;
         this.fetchData();
       }
+
     }
 }
 </script>
@@ -323,4 +349,7 @@ export default {
    div{
       text-align: center;
    };
+   .addUpdateBtn{
+      text-align: center;
+   }
 </style>
