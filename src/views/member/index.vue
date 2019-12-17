@@ -22,7 +22,7 @@
          </el-form-item>
          <el-form-item>
             <el-button type="primary" @click="fetchData" size="medium">查询</el-button>
-            <el-button type="primary" @click="resetForm('memberQueryForm')" size="medium">重置</el-button>
+            <el-button @click="resetForm('memberQueryForm')" size="medium">重置</el-button>
             <el-button type="primary" @click="add('memberQueryForm')" size="medium">新增</el-button>
          </el-form-item>
       </el-form>
@@ -46,7 +46,7 @@
             <template slot-scope="scope">
                <el-button
                   size="mini"
-                  @click="handleEdit(scope.row)">
+                  @click="handleEdit(scope.row.id)">
                   编辑
                </el-button>
                <el-button
@@ -118,12 +118,12 @@
             </el-col>
             <el-col :span="12">
                <el-form-item label="常用地址" prop="address">
-                  <el-input v-model="addUpdateForm.address"></el-input>
+                  <el-input type="textarea" v-model="addUpdateForm.address"></el-input>
                </el-form-item>
             </el-col>
                <div class="addUpdateBtn">
                    <el-button type="primary" size="small" @click="addUpdateMember('addUpdateForm')">{{addUpdateOperation}}</el-button>
-                   <el-button type="primary" size="small" @click="resetForm('addUpdateForm')">重置</el-button>
+                   <el-button size="small" @click="resetForm('addUpdateForm')">重置</el-button>
                </div>
          </el-form>
       </el-dialog>
@@ -293,20 +293,18 @@ export default {
            this.addUpdateForm = {};
            this.dialogFormVisible = true;
        },
-       handleEdit(row) {
+       handleEdit(id) {
           console.log("编辑数据");
-          this.addUpdateForm = row;
-          console.log("this.addUpdateMember.telephoneNumber="+this.addUpdateForm.telephoneNumber);
-          this.addUpdateForm.telephoneNumber = this.addUpdateForm.telephoneNumber+'';
-          let paymentType =  this.addUpdateForm.paymentType;
-          switch(paymentType) {
-                case '银行卡': this.addUpdateForm.paymentType=1; break;
-                case '支付宝': this.addUpdateForm.paymentType=2; break;
-                case '微信': this.addUpdateForm.paymentType=3; break;
-                case '现金': this.addUpdateForm.paymentType=4; break;
-                case '信用卡': this.addUpdateForm.paymentType=5; break;
-                default: break;
-          };
+          let params={};
+          params.id=id;
+          axios.get(member.search+'/'+this.page.pageSize+'/'+this.page.currentPage,{
+               params
+            }).then(response => {
+               let data = response.data;
+               console.log(data);
+               this.addUpdateForm=data.result[0];
+               this.addUpdateForm.telephoneNumber=this.addUpdateForm.telephoneNumber+'';
+            });
           this.addUpdateForm.lastUpdateBy=window.localStorage.getItem('user');
           this.dialogFormVisible = true;
           this.addUpdateOperation = '修改';
