@@ -5,5 +5,11 @@
         "update" : "member/update",
         "delete" : "member/delete",
         "add": "member/add"
+    },
+    "supplier": {
+        "search": "supplier/list",
+        "update" : "supplier/update",
+        "delete" : "supplier/delete",
+        "add": "supplier/add"
     }
 }
