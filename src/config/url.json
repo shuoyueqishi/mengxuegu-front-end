@@ -11,5 +11,9 @@
         "update" : "supplier/update",
         "delete" : "supplier/delete",
         "add": "supplier/add"
+    },
+    "user": {
+        "check": "user/check",
+        "updatePassword": "user/update/password"
     }
 }

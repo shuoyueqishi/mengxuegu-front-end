@@ -167,9 +167,7 @@ export default {
           this.supplierQueryForm.name ? params.name = this.supplierQueryForm.name: ''; 
           this.supplierQueryForm.telephone ? params.telephone = this.supplierQueryForm.telephone: ''; 
           this.supplierQueryForm.contact ? params.contact = this.supplierQueryForm.contact: ''; 
-          axios.get(supplier.search+'/'+this.page.pageSize+'/'+this.page.currentPage,{
-               params
-            }).then(response => {
+          axios.get(supplier.search+'/'+this.page.pageSize+'/'+this.page.currentPage,{params}).then(response => {
             let data = response.data;
              console.log(data);
              this.supplierList = data.result;
