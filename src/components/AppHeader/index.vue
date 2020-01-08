@@ -143,8 +143,9 @@ export default {
                      console.log("update password respons:"+updateRes);
                      if (updateRes.status === 'SUCCESS') {
                        this.$message({type: 'success',message: updateRes.message});
-                       this.resetForm('ruleForm')
+                       this.resetForm('ruleForm');
                        this.dialogFormVisible = false;
+                       this.$router.push('/login');
                      } else {
                        this.$message({type: 'fail',message: updateRes.message});
                      }
